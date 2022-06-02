@@ -29,7 +29,7 @@ const getPublicKey = () => {
 const getPrivateKey = () => {
   try {
     const privateKeyData = fs.readFileSync("private.pem");
-    const privateKeyBuffer = String(Buffer.from(privateKeyData, 'base64'));
+    const privateKeyBuffer = String(Buffer.from(privateKeyData, "base64"));
 
     const privateKey = crypto.createPrivateKey({
       key: privateKeyBuffer,
@@ -72,6 +72,7 @@ app.get("/list-users", (req, res) => {
 });
 
 app.get("/public-key", (req, res) => {
+  // Make sure public key is accessible
   res.send(getPublicKey().export(keyOptions.publicKeyEncoding));
 });
 

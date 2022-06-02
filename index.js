@@ -69,14 +69,6 @@ app.post("/register-user", (req, res) => {
   }
 });
 
-app.get("/list-users", (req, res) => {
-  var users = [];
-  db.query(`SELECT * FROM users;`, (err, query) => {
-    console.log(query.rows);
-  });
-  res.send('err');
-});
-
 app.get("/public-key", (req, res) => {
   // Make sure public key is accessible
   res.send(getPublicKey().export(keyOptions.publicKeyEncoding));

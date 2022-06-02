@@ -1,14 +1,23 @@
 const express = require("express");
 const { Pool, Client } = require("pg");
 const crypto = require("crypto");
+const dotenv = require('dotenv');
+const lodash = require('lodash');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const db_url = process.env.DATABASE_URL;
+const config = dotenv.config();
+
+if (!('error' in config)) {
+  envs = config.parsed;
+} else {
+  envs = {};
+  lodash.each(process.env, (value, key) => envs[key] = value);
+}
 
 const db = new Pool({
-  connectionString: db_url,
+  connectionString: envs.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
@@ -37,7 +46,7 @@ const getPublicKey = () => {
 const getPrivateKey = () => {
   try {
     // Private key only saved on server, not on GitHub
-    const privateKeyData = process.env.PRIVATE_KEY;
+    const privateKeyData = envs.PRIVATE_KEY;
     const privateKeyBuffer = String(Buffer.from(privateKeyData, "base64"));
 
     return crypto.createPrivateKey({

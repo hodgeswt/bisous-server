@@ -1,19 +1,19 @@
 const express = require("express");
 const { Pool, Client } = require("pg");
 const crypto = require("crypto");
-const dotenv = require('dotenv');
-const lodash = require('lodash');
+const dotenv = require("dotenv");
+const lodash = require("lodash");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const config = dotenv.config();
 
-if (!('error' in config)) {
+if (!("error" in config)) {
   envs = config.parsed;
 } else {
   envs = {};
-  lodash.each(process.env, (value, key) => envs[key] = value);
+  lodash.each(process.env, (value, key) => (envs[key] = value));
 }
 
 const db = new Pool({
@@ -44,21 +44,15 @@ const getPublicKey = () => {
 };
 
 const getPrivateKey = () => {
-  try {
-    // Private key only saved on server, not on GitHub
-    console.log(envs);
-    console.log(process.env);
-    const privateKeyData = envs.PRIVATE_KEY;
-    const privateKeyBuffer = String(Buffer.from(privateKeyData, "base64"));
-
-    return crypto.createPrivateKey({
-      key: privateKeyBuffer,
-      format: "pem",
-      type: "pkcs8",
-    });
-  } catch (e) {
-    console.log("Please set PRIVATE_KEY environment variable");
-  }
+  // Private key only saved on server, not on GitHub
+  const privateKeyData = envs.PRIVATE_KEY;
+  console.log(privateKeyData);
+  
+  return crypto.createPrivateKey({
+    key: Buffer.from(privateKeyData),
+    format: "pem",
+    type: "pkcs8",
+  });
 };
 
 app.use(express.json());
@@ -67,10 +61,7 @@ var users = [];
 
 app.post("/register-user", (req, res) => {
   let username = req.body.user;
-  db.query(
-      `INSERT INTO user (user) VALUES ('${username}')`,
-      () => {}
-  )
+  db.query(`INSERT INTO user (user) VALUES ('${username}')`, () => {});
   res.send(`user ${req.body.user} registered`);
 });
 

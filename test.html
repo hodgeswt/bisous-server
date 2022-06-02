@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<head>
+<script src="./node_modules/socket.io/client-dist/socket.io.js"></script>
+<script>
+  function makeConnection() {
+    var socket = io.connect('http://bisous-server.herokuapp.com');
+  }
+</script>
+</head>
+
+<body>
+  <button onclick="makeConnection()">Make socket connection</button>
+</body>

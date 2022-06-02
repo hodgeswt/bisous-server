@@ -45,11 +45,8 @@ const getPublicKey = () => {
 
 const getPrivateKey = () => {
   // Private key only saved on server, not on GitHub
-  const privateKeyData = envs.PRIVATE_KEY;
-  console.log(typeof(privateKeyData));
-
   return crypto.createPrivateKey({
-    key: Buffer.from(privateKeyData),
+    key: envs.PRIVATE_KEY,
     format: "pem",
     type: "pkcs8",
   });

@@ -2,12 +2,13 @@
 <head>
 <script src="./node_modules/socket.io/client-dist/socket.io.js"></script>
 <script>
-  function makeConnection() {
+  function sendSocket() {
     var socket = io.connect('http://bisous-server.herokuapp.com');
+    socket.emit('socket', `${socket.id}`, "msg");
   }
 </script>
 </head>
 
 <body>
-  <button onclick="makeConnection()">Make socket connection</button>
+  <button onclick="sendSocket()">Send socket message</button>
 </body>

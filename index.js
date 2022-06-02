@@ -106,11 +106,13 @@ var io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   // when a new client connects, add them to the socket list
-  socket.on('socket', (msg) => {
-    if (msg.user === undefined) {
+  console.log('new connection' + socket.id)
+  socket.on('socket', (user, _) => {
+    console.log('socket!');
+    if (user === undefined) {
       deleteSocket(socket.id);
     } else {
-      registerSocket(socket.id, msg.user);
+      registerSocket(socket.id, user);
     }
   })
 });

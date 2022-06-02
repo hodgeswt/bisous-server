@@ -28,6 +28,7 @@ const getPublicKey = () => {
 
 const getPrivateKey = () => {
   try {
+    // Private key only saved on server, not on GitHub
     const privateKeyData = fs.readFileSync("private.pem");
     const privateKeyBuffer = String(Buffer.from(privateKeyData, "base64"));
 

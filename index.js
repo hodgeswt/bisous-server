@@ -90,7 +90,7 @@ const deleteSocket = (socket) => {
 }
 const registerSocket = (socket, user) => {
   deleteSocket(socket);
-
+  console.log(socket, user);
   db.query(`INSERT INTO users ("user", "socket") VALUES ('${user}', '${socket}');`, (err, _) => {});
 }
 

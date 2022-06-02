@@ -62,11 +62,7 @@ var users = [];
 
 app.post("/register-user", (req, res) => {
   let username = req.body.user;
-  db.query(`INSERT INTO users ("user") VALUES ('${username}');`, (err, _) => {
-    if (err) {
-      throw err;
-    }
-  });
+  db.query(`INSERT INTO users ("user") VALUES ('${username}');`, (err, _) => {});
   res.send(`user ${req.body.user} registered`);
 });
 

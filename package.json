@@ -1,0 +1,14 @@
+{
+  "name": "bisous-server",
+  "version": "1.0.0",
+  "description": "server for the iOS app bisous",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Will Hodges",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

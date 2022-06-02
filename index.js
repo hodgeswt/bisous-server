@@ -3,7 +3,7 @@ const { Pool, Client } = require("pg");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
 const lodash = require("lodash");
-
+const fs = require("fs");
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json());
@@ -58,6 +58,16 @@ const getPrivateKey = () => {
     type: "pkcs8",
   });
 };
+
+app.get("/", (_, res) => {
+  fs.readFile("./index.html", "utf-8", (err, data) => {
+    if (err) {
+      throw err;
+    }
+
+    res.send(data);
+  });
+});
 
 app.post("/register-user", (req, res) => {
   let username = req.body.user;

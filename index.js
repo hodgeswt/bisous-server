@@ -6,8 +6,11 @@ const lodash = require("lodash");
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.use(express.json());
 
 const config = dotenv.config();
+
+const isAlnum = new RegExp(/^[0-9a-zA-Z]+$/);
 
 if (!("error" in config)) {
   envs = config.parsed;
@@ -56,18 +59,22 @@ const getPrivateKey = () => {
   });
 };
 
-app.use(express.json());
-
-var users = [];
-
 app.post("/register-user", (req, res) => {
   let username = req.body.user;
-  db.query(`INSERT INTO users ("user") VALUES ('${username}');`, (err, _) => {});
-  res.send(`user ${req.body.user} registered`);
+  if (isAlnum.test(username)) {
+    db.query(`INSERT INTO users ("user") VALUES ('${username}');`, (err, _) => {});
+    res.send(`user ${req.body.user} registered`);
+  } else {
+    res.send(`user ${req.body.user} not registered`);
+  }
 });
 
 app.get("/list-users", (req, res) => {
-  res.send(users);
+  var users = [];
+  db.query(`SELECT * FROM users;`, (err, query) => {
+    console.log(query.rows);
+  });
+  res.send('err');
 });
 
 app.get("/public-key", (req, res) => {

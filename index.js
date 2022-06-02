@@ -1,10 +1,18 @@
 const express = require("express");
 const { Pool, Client } = require("pg");
 const crypto = require("crypto");
-const fs = require("fs");
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const db_url = ENV["DATABASE_URL"];
+
+const db = new Pool({
+  connectionString: db_url,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
 const keyOptions = {
   modulusLength: 1024 * 2,
@@ -29,7 +37,7 @@ const getPublicKey = () => {
 const getPrivateKey = () => {
   try {
     // Private key only saved on server, not on GitHub
-    const privateKeyData = fs.readFileSync("private.pem");
+    const privateKeyData = ENV["PRIVATE_KEY"];
     const privateKeyBuffer = String(Buffer.from(privateKeyData, "base64"));
 
     const privateKey = crypto.createPrivateKey({
@@ -40,22 +48,8 @@ const getPrivateKey = () => {
 
     return privateKey;
   } catch (e) {
-    return createPrivateKey();
+    console.log("Please set PRIVATE_KEY environment variable");
   }
-};
-
-const createPrivateKey = () => {
-  const keyData = crypto.generateKeyPairSync("rsa", keyOptions);
-
-  fs.writeFileSync("private.pem", keyData.privateKey);
-
-  const privateKey = crypto.createPrivateKey({
-    key: keyData.privateKey,
-    format: "pem",
-    type: "pkcs8",
-  });
-
-  return privateKey;
 };
 
 app.use(express.json());
@@ -64,7 +58,10 @@ var users = [];
 
 app.post("/register-user", (req, res) => {
   let username = req.body.user;
-  users.push(username);
+  db.query(
+      `INSERT INTO user (user) VALUES ('${username}')`,
+      () => {}
+  )
   res.send(`user ${req.body.user} registered`);
 });
 

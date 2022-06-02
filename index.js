@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const db_url = ENV["DATABASE_URL"];
+const db_url = process.env["DATABASE_URL"];
 
 const db = new Pool({
   connectionString: db_url,
@@ -37,7 +37,7 @@ const getPublicKey = () => {
 const getPrivateKey = () => {
   try {
     // Private key only saved on server, not on GitHub
-    const privateKeyData = ENV["PRIVATE_KEY"];
+    const privateKeyData = process.env["PRIVATE_KEY"];
     const privateKeyBuffer = String(Buffer.from(privateKeyData, "base64"));
 
     const privateKey = crypto.createPrivateKey({

@@ -89,11 +89,12 @@ app.get("/public-key", (req, res) => {
   res.send(getPublicKey().export(keyOptions.publicKeyEncoding));
 });
 
-const deleteSocket = (socket) => {
+const deleteSocket = (socket, user) => {
   db.query(`DELETE FROM sockets WHERE socket = '${socket}';`, (err, _) => {});
+  db.query(`DELETE FROM sockets WHERE user = '${user}';`, (err, _) => {});
 };
 const registerSocket = (socket, user) => {
-  deleteSocket(socket);
+  deleteSocket(socket, user);
   db.query(
     `INSERT INTO sockets ("user", "socket") VALUES ('${user}', '${socket}');`,
     (err, _) => {
@@ -117,7 +118,7 @@ io.on("connection", (socket) => {
   console.log("new connection" + socket.id);
   socket.on("socket", (msg) => {
     if (msg.user === undefined) {
-      deleteSocket(socket.id);
+      deleteSocket(socket.id, msg.user);
     } else {
       registerSocket(socket.id, msg.user);
     }

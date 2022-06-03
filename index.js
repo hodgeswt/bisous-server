@@ -117,14 +117,13 @@ io.on("connection", (socket) => {
   // when a new client connects, add them to the socket list
   console.log("new connection" + socket.id);
   socket.on("socket", (msg) => {
-    console.log(msg);
-    console.log("socket" + data)
-    if (data.user === undefined) {
+    console.log(msg.user);
+    if (msg.user === undefined) {
       console.log("deleting socket");
-      deleteSocket(socket.id, data.user);
+      deleteSocket(socket.id, msg.user);
     } else {
       console.log("registering socket");
-      registerSocket(socket.id, data.user);
+      registerSocket(socket.id, msg.user);
     }
   });
 });

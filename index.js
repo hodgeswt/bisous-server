@@ -90,12 +90,12 @@ app.get("/public-key", (req, res) => {
 });
 
 const deleteSocket = (socket) => {
-  db.query(`DELETE FROM users WHERE socket = '${socket}';`, (err, _) => {});
+  db.query(`DELETE FROM sockets WHERE socket = '${socket}';`, (err, _) => {});
 };
 const registerSocket = (socket, user) => {
   deleteSocket(socket);
   db.query(
-    `INSERT INTO users ("user", "socket") VALUES ('${user}', '${socket}');`,
+    `INSERT INTO sockets ("user", "socket") VALUES ('${user}', '${socket}');`,
     (err, _) => {
       console.log(err);
     }

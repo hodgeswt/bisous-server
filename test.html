@@ -2,7 +2,7 @@
 <head>
 <script src="./node_modules/socket.io/client-dist/socket.io.js"></script>
 <script>
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('http://bisous-server.herokuapp.com');
 
   function sendSocket() {
     socket.emit('socket', {"user": "hodgeswt"});

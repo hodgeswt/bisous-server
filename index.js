@@ -117,6 +117,7 @@ io.on("connection", (socket) => {
   // when a new client connects, add them to the socket list
   console.log("new connection" + socket.id);
   socket.on("socket", (msg) => {
+    console.log("socket" + msg)
     if (msg.user === undefined) {
       deleteSocket(socket.id, msg.user);
     } else {

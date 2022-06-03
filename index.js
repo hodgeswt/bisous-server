@@ -117,8 +117,6 @@ io.on("connection", (socket) => {
   // when a new client connects, add them to the socket list
   console.log("new connection" + socket.id);
   socket.on("socket", (msg) => {
-    let data = JSON.parse(msg);
-    console.log(data)
     console.log(msg);
     console.log("socket" + data)
     if (data.user === undefined) {

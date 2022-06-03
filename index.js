@@ -119,8 +119,10 @@ io.on("connection", (socket) => {
   socket.on("socket", (msg) => {
     console.log("socket" + msg)
     if (msg.user === undefined) {
+      console.log("deleting socket");
       deleteSocket(socket.id, msg.user);
     } else {
+      console.log("registering socket");
       registerSocket(socket.id, msg.user);
     }
   });

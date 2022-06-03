@@ -91,7 +91,7 @@ app.get("/public-key", (req, res) => {
 
 const deleteSocket = (socket, user) => {
   db.query(`DELETE FROM sockets WHERE socket = '${socket}';`, (err, _) => {});
-  db.query(`DELETE FROM sockets WHERE user = '${user}';`, (err, _) => {});
+  db.query(`DELETE FROM sockets WHERE "user" = '${user}';`, (err, _) => {});
 };
 const registerSocket = (socket, user) => {
   deleteSocket(socket, user);

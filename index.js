@@ -130,6 +130,12 @@ io.on("connection", (socket) => {
 
   socket.on("partner", (msg) => {
     if (msg.user !== undefined && msg.partner !== undefined) {
+      db.query(`DELETE FROM partners WHERE "partner1" = '${msg.partner}`, (err, _) => {
+        console.log(err);
+      });
+      db.query(`DELETE FROM partners WHERE "partner1" = '${msg.user}`, (err, _) => {
+        console.log(err);
+      });
       db.query(
         `INSERT INTO partners (partner1, partner2) VALUES ('${msg.partner}', '${msg.user}');`,
         (err, _) => {

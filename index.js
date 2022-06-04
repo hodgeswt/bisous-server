@@ -123,4 +123,8 @@ io.on("connection", (socket) => {
       registerSocket(socket.id, msg.user);
     }
   });
+
+  socket.on("emote", (msg) => {
+    console.log(msg);
+  })
 });

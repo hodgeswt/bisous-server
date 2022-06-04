@@ -127,4 +127,21 @@ io.on("connection", (socket) => {
   socket.on("emote", (msg) => {
     console.log(msg);
   })
+
+  socket.on("partner", (msg) => {
+    if (msg.user !== undefined && msg.partner !== undefined) {
+      db.query(
+        `INSERT INTO partners (partner1, partner2) VALUES ('${msg.partner}', '${msg.user}');`,
+        (err, _) => {
+          console.log(err);
+        }
+      );
+      db.query(
+        `INSERT INTO partners (partner1, partner2) VALUES ('${msg.user}', '${msg.partner}');`,
+        (err, _) => {
+          console.log(err);
+        }
+      );
+    }
+  })
 });

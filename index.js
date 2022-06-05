@@ -126,6 +126,7 @@ io.on("connection", (socket) => {
 
   socket.on("emote", (msg) => {
     if (msg.data !== undefined) {
+      console.log(msg.data);
       const buf = Buffer.from(msg.data, "base64");
       const clear = crypto.privateDecrypt(getPrivateKey(), buf);
       console.log(clear);

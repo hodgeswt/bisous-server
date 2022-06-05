@@ -126,18 +126,27 @@ io.on("connection", (socket) => {
 
   socket.on("emote", (msg) => {
     if (msg.data !== undefined) {
+      const buf = Buffer.from(msg.data, "base64");
+      const clear = crypto.privateDecrypt(getPrivateKey(), buf);
+      console.log(clear);
       console.log(msg.data);
     }
-  })
+  });
 
   socket.on("partner", (msg) => {
     if (msg.user !== undefined && msg.partner !== undefined) {
-      db.query(`DELETE FROM partners WHERE "partner1" = '${msg.partner}' OR "partner2" = '${msg.partner}'`, (err, _) => {
-        console.log(err);
-      });
-      db.query(`DELETE FROM partners WHERE "partner1" = '${msg.user}' OR "partner2" = '${msg.user}'`, (err, _) => {
-        console.log(err);
-      });
+      db.query(
+        `DELETE FROM partners WHERE "partner1" = '${msg.partner}' OR "partner2" = '${msg.partner}'`,
+        (err, _) => {
+          console.log(err);
+        }
+      );
+      db.query(
+        `DELETE FROM partners WHERE "partner1" = '${msg.user}' OR "partner2" = '${msg.user}'`,
+        (err, _) => {
+          console.log(err);
+        }
+      );
       db.query(
         `INSERT INTO partners (partner1, partner2) VALUES ('${msg.partner}', '${msg.user}');`,
         (err, _) => {
@@ -151,5 +160,5 @@ io.on("connection", (socket) => {
         }
       );
     }
-  })
+  });
 });

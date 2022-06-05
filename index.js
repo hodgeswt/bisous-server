@@ -125,6 +125,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("emote", (msg) => {
+    console.log(msg);
     if (msg.data !== undefined) {
       console.log(msg.data);
       const buf = Buffer.from(msg.data, "base64");

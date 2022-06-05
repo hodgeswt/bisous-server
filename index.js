@@ -1,5 +1,3 @@
-import EmoteData from "./emoteData";
-
 const express = require("express");
 const { Pool, Client } = require("pg");
 const crypto = require("crypto");
@@ -62,6 +60,24 @@ const getPrivateKey = () => {
     type: "pkcs8",
   });
 };
+
+class EmoteData {
+  constructor(data) {
+      this.data = data;
+  }
+
+  parseData() {
+      let intialSplit = this.data.split(',');
+      let emote = intialSplit[0].split(':')[1].trim();
+      let sender = initialSplit[1].split(':')[1].trim();
+      let receiver = initialSplit[2].split(':')[1].trim();
+      return {
+          emote: emote,
+          sender: sender,
+          receiver: receiver
+      };
+  }
+}
 
 app.get("/", (_, res) => {
   fs.readFile("./index.html", "utf-8", (err, data) => {

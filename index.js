@@ -134,7 +134,6 @@ var io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   // when a new client connects, add them to the socket list
   socket.on("socket", (msg) => {
-    console.log(msg.user);
     if (msg.user === undefined) {
       deleteSocket(socket.id, msg.user);
     } else {
@@ -148,8 +147,22 @@ io.on("connection", (socket) => {
       padding: crypto.constants.RSA_PKCS1_PADDING
     }, msg).toString();
     const emoteData = new EmoteData(clear).parseData();
-    console.log(emoteData);
+    
+    db.query(
+      `SELECT * FROM sockets WHERE "user" = '${emoteData.receiver}';`,
+      (e, query) => {
+        if (e) {
+          console.log(e);
+        }
+
+        var socket = query.rows[0].socket;
+        io.to(socket).emit("emote", emoteData);
+    });
   });
+
+  socket.on("disconnect", () => {
+    deleteSocket(socket.id, "");
+  })
 
   socket.on("partner", (msg) => {
     if (msg.user !== undefined && msg.partner !== undefined) {

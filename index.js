@@ -68,7 +68,7 @@ class EmoteData {
 
   parseData() {
       let initialSplit = this.data.split(',');
-      let emote = intialSplit[0].split(':')[1].trim();
+      let emote = initialSplit[0].split(':')[1].trim();
       let sender = initialSplit[1].split(':')[1].trim();
       let receiver = initialSplit[2].split(':')[1].trim();
       return {

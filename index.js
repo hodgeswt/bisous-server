@@ -127,8 +127,7 @@ io.on("connection", (socket) => {
 
   socket.on("emote", (msg) => {
     if (msg.data !== undefined) {
-      let data = utf8.decode(msg.data);
-      console.log(data)
+      console.log(msg.data);
     }
   })
 

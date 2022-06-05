@@ -126,7 +126,7 @@ io.on("connection", (socket) => {
 
   socket.on("emote", (msg) => {
     if (msg !== undefined) {
-      const clear = crypto.privateDecrypt(getPrivateKey(), msg);
+      const clear = crypto.privateDecrypt(getPrivateKey(), msg, crypto.constants.RSA_PKCS1_PADDING);
       console.log(clear);
     }
   });

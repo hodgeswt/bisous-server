@@ -1,6 +1,7 @@
 {
   "name": "bisous-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "server for the iOS app bisous",
   "main": "index.js",
   "scripts": {

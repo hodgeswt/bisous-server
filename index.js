@@ -57,7 +57,7 @@ const getPrivateKey = () => {
   return crypto.createPrivateKey({
     key: key,
     format: "pem",
-    type: "pkcs8",
+    type: "pkcs1",
   });
 };
 
@@ -125,10 +125,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("emote", (msg) => {
-    if (msg !== undefined) {
-      const clear = crypto.privateDecrypt(getPrivateKey(), msg, crypto.constants.RSA_PKCS1_PADDING);
-      console.log(clear);
-    }
+    console.log(msg);
+    const clear = crypto.privateDecrypt(getPrivateKey(), msg, crypto.constants.RSA_PKCS1_PADDING);
+    console.log(clear);
   });
 
   socket.on("partner", (msg) => {

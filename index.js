@@ -121,6 +121,17 @@ const registerSocket = (socket, user) => {
   );
 };
 
+const registerPublicKey = (user, publicKey) => {
+  db.query(
+    `INSERT INTO "keys" ("user", "publicKey") VALUES ('${user}', '${publicKey}';`,
+    (err, _) => {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+}
+
 var server = app.listen(port, () => {
   console.log(`bisous server listening on port ${port}!`);
 });
@@ -138,6 +149,9 @@ io.on("connection", (socket) => {
       deleteSocket(socket.id, msg.user);
     } else {
       registerSocket(socket.id, msg.user);
+      if (msg.publicKey !== undefined) {
+        registerPublicKey(msg.user, msg.publicKey);
+      }
     }
   });
 
@@ -156,7 +170,21 @@ io.on("connection", (socket) => {
         }
 
         var socket = query.rows[0].socket;
-        io.to(socket).emit("emote", emoteData);
+        db.query(
+          `SELECT * FROM keys WHERE "user" = '${emoteData.receiver}';`,
+          (e, query) => {
+            if (e) {
+              console.log(e);
+            }
+
+            var key = query.rows[0].publicKey;
+            var encrypted = crypto.publicEncrypt({
+              key: key,
+              padding: crypto.constants.RSA_PKCS1_PADDING
+            }, `${emoteData.emote}:${emoteData.sender}:${emoteData.receiver}`).toString();
+            io.to(socket).emit("emote", encrypted);
+          }
+        );
     });
   });
 

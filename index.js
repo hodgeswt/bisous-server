@@ -1,3 +1,5 @@
+import EmoteData from "./emoteData";
+
 const express = require("express");
 const { Pool, Client } = require("pg");
 const crypto = require("crypto");

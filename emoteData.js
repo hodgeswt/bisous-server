@@ -15,3 +15,5 @@ class EmoteData {
         };
     }
 }
+
+export default EmoteData;

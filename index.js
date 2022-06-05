@@ -128,8 +128,9 @@ io.on("connection", (socket) => {
     const clear = crypto.privateDecrypt({
       key: getPrivateKey(), 
       padding: crypto.constants.RSA_PKCS1_PADDING
-    }, msg);
-    console.log(clear.toString());
+    }, msg).toString();
+    const emoteData = new EmoteData(clear).parseData();
+    console.log(emoteData);
   });
 
   socket.on("partner", (msg) => {

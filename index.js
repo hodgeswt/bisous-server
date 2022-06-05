@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const lodash = require("lodash");
 const fs = require("fs");
 var cors = require("cors");
+const utf8 = require('utf8');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -125,7 +126,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("emote", (msg) => {
-    console.log(msg);
+    if (msg.data !== undefined) {
+      let data = utf8.decode(msg.data);
+      console.log(data)
+    }
   })
 
   socket.on("partner", (msg) => {

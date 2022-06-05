@@ -63,19 +63,19 @@ const getPrivateKey = () => {
 
 class EmoteData {
   constructor(data) {
-      this.data = data;
+    this.data = data;
   }
 
   parseData() {
-      let initialSplit = this.data.split(',');
-      let emote = initialSplit[0].split(':')[1].trim();
-      let sender = initialSplit[1].split(':')[1].trim();
-      let receiver = initialSplit[2].split(':')[1].trim();
-      return {
-          emote: emote,
-          sender: sender,
-          receiver: receiver
-      };
+    let initialSplit = this.data.split(",");
+    let emote = initialSplit[0].split(":")[1].trim();
+    let sender = initialSplit[1].split(":")[1].trim();
+    let receiver = initialSplit[2].split(":")[1].trim();
+    return {
+      emote: emote,
+      sender: sender,
+      receiver: receiver,
+    };
   }
 }
 
@@ -123,14 +123,14 @@ const registerSocket = (socket, user) => {
 
 const registerPublicKey = (user, publicKey) => {
   db.query(
-    `INSERT INTO "keys" ("user", "publicKey") VALUES ('${user}', '${publicKey}';`,
+    `INSERT INTO "keys" ("user", "publicKey") VALUES ('${user}', '${publicKey}');`,
     (err, _) => {
       if (err) {
         console.log(err);
       }
     }
   );
-}
+};
 
 var server = app.listen(port, () => {
   console.log(`bisous server listening on port ${port}!`);
@@ -156,41 +156,54 @@ io.on("connection", (socket) => {
   });
 
   socket.on("emote", (msg) => {
-    const clear = crypto.privateDecrypt({
-      key: getPrivateKey(), 
-      padding: crypto.constants.RSA_PKCS1_PADDING
-    }, msg).toString();
+    const clear = crypto
+      .privateDecrypt(
+        {
+          key: getPrivateKey(),
+          padding: crypto.constants.RSA_PKCS1_PADDING,
+        },
+        msg
+      )
+      .toString();
     const emoteData = new EmoteData(clear).parseData();
-    
+
     db.query(
       `SELECT * FROM sockets WHERE "user" = '${emoteData.receiver}';`,
       (e, query) => {
         if (e) {
           console.log(e);
         }
-
-        var socket = query.rows[0].socket;
-        db.query(
-          `SELECT * FROM keys WHERE "user" = '${emoteData.receiver}';`,
-          (e, query) => {
-            if (e) {
-              console.log(e);
+        if (query.rows.length > 0) {
+          var socket = query.rows[0].socket;
+          db.query(
+            `SELECT * FROM keys WHERE "user" = '${emoteData.receiver}';`,
+            (e, query) => {
+              if (e) {
+                console.log(e);
+              }
+              if (query.rows.length > 0) {
+                var key = query.rows[0].publicKey;
+                var encrypted = crypto
+                  .publicEncrypt(
+                    {
+                      key: key,
+                      padding: crypto.constants.RSA_PKCS1_PADDING,
+                    },
+                    `${emoteData.emote}:${emoteData.sender}:${emoteData.receiver}`
+                  )
+                  .toString();
+                io.to(socket).emit("emote", encrypted);
+              }
             }
-
-            var key = query.rows[0].publicKey;
-            var encrypted = crypto.publicEncrypt({
-              key: key,
-              padding: crypto.constants.RSA_PKCS1_PADDING
-            }, `${emoteData.emote}:${emoteData.sender}:${emoteData.receiver}`).toString();
-            io.to(socket).emit("emote", encrypted);
-          }
-        );
-    });
+          );
+        }
+      }
+    );
   });
 
   socket.on("disconnect", () => {
     deleteSocket(socket.id, "");
-  })
+  });
 
   socket.on("partner", (msg) => {
     if (msg.user !== undefined && msg.partner !== undefined) {

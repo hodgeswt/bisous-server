@@ -191,7 +191,6 @@ io.on("connection", (socket) => {
                     },
                     `${emoteData.emote}:${emoteData.sender}:${emoteData.receiver}`
                   )
-                  .toString();
                 io.to(socket).emit("emote", encrypted);
               }
             }
